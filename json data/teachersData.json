@@ -1,0 +1,24 @@
+{
+  "teachers": [
+    {
+      "username": "michael_smith",
+      "password": "teach789"
+    },
+    {
+      "username": "sarah_johnson",
+      "password": "math2024"
+    },
+    {
+      "username": "david_brown",
+      "password": "classroom45"
+    },
+    {
+      "username": "linda_wilson",
+      "password": "history88"
+    },
+    {
+      "username": "james_taylor",
+      "password": "science77"
+    }
+  ]
+}

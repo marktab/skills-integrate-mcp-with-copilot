@@ -3,7 +3,6 @@ document.addEventListener("DOMContentLoaded", () => {
   const activitySelect = document.getElementById("activity");
   const signupForm = document.getElementById("signup-form");
   const messageDiv = document.getElementById("message");
-
   // Function to fetch activities from API
   async function fetchActivities() {
     try {
@@ -72,26 +71,23 @@ document.addEventListener("DOMContentLoaded", () => {
     const button = event.target;
     const activity = button.getAttribute("data-activity");
     const email = button.getAttribute("data-email");
-
-    try {
+      try {
       const response = await fetch(
-        `/activities/${encodeURIComponent(
-          activity
-        )}/unregister?email=${encodeURIComponent(email)}`,
+      `/activities/${encodeURIComponent(activity)}/unregister?email=${encodeURIComponent(email)}`,
         {
           method: "DELETE",
         }
       );
 
       const result = await response.json();
-
       if (response.ok) {
         messageDiv.textContent = result.message;
         messageDiv.className = "success";
-
+       
         // Refresh activities list to show updated participants
         fetchActivities();
       } else {
+        alert(result.detail)
         messageDiv.textContent = result.detail || "An error occurred";
         messageDiv.className = "error";
       }
@@ -108,20 +104,21 @@ document.addEventListener("DOMContentLoaded", () => {
       messageDiv.classList.remove("hidden");
       console.error("Error unregistering:", error);
     }
-  }
+   }
+
+    
+    
 
   // Handle form submission
   signupForm.addEventListener("submit", async (event) => {
     event.preventDefault();
-
+     //console.log(tokens.tokensLoginData)
     const email = document.getElementById("email").value;
     const activity = document.getElementById("activity").value;
 
     try {
       const response = await fetch(
-        `/activities/${encodeURIComponent(
-          activity
-        )}/signup?email=${encodeURIComponent(email)}`,
+        `/activities/${encodeURIComponent(activity)}/signup?email=${encodeURIComponent(email)}`,
         {
           method: "POST",
         }
@@ -157,4 +154,58 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Initialize app
   fetchActivities();
+  async function teachersLogin(){
+   let loginBtn=document.querySelector('.login')
+   let loginForm=document.querySelector(".login-form")
+   let closeDialog=document.getElementById("my-dialog")
+   let loginPassword=document.querySelector('.login-password')
+   let show=document.querySelector('.show')
+   let hide=document.querySelector('.hide')
+   hide.onclick=()=>{
+     hide.style.display="none"
+     show.style.display="block"
+     loginPassword.setAttribute("type","password")
+     hide.style.marginTop="-27px"
+   } 
+   show.onclick=()=>{
+     hide.style.display="block"
+     show.style.display="none"
+     loginPassword.setAttribute("type","text")
+     hide.style.marginTop="-27px"
+     show.style.marginTop="-27px"
+   }
+   loginForm.addEventListener("submit",async(event)=>{
+     event.preventDefault()
+     let loginEmail=document.querySelector('.login-email')
+     try {
+      const response = await fetch("http://127.0.0.1:8000/login", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        email:loginEmail.value,
+        password:loginPassword.value
+      })
+    });
+      let result=await response.json();
+         if(response.ok){
+           alert(result.success)
+           loginBtn.style.display="none"
+           loginEmail.style.boxShadow=" 0 0px 5px lime"
+           loginPassword.style.boxShadow=" 0 0px 5px lime"
+            closeDialog.close()
+         }
+         else{
+          loginEmail.style.boxShadow=" 0 0px 5px red"
+          loginPassword.style.boxShadow=" 0 0px 5px red"
+          alert(result.detail)  
+        }
+     } catch (error) {
+       console.log(error)
+     }
+   
+   })
+  }
+  teachersLogin()
 });

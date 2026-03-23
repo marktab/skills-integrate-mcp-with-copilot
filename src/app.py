@@ -77,17 +77,48 @@ activities = {
     }
 }
 
+loginTeachers={
+   "michael":{
+    "username":"michael_smith@gmail.com",
+    "password":"teach789"
+   },
+   "sarah":{
+    "username":"sarah_johnson@gmail.com",
+    "password":"math2024"
+   },
+   "david":{
+    "username":"david_brown@gmail.com",
+    "password":"classroom45"
+   }
+}
 
 @app.get("/")
 def root():
     return RedirectResponse(url="/static/index.html")
 
-
+teachersdata={}
 @app.get("/activities")
 def get_activities():
     return activities
 
 
+@app.post("/login")
+def loginForm(data:dict):
+    loginEmail = data.get("email")
+    loginPassword = data.get("password")
+    matched_teacher = None
+    for teacher, data in loginTeachers.items():
+        if loginEmail == data["username"] and loginPassword == data["password"]:
+            teachersdata["username"] = loginEmail
+            teachersdata["password"] = loginPassword
+            matched_teacher = teacher
+            break
+    if not matched_teacher:
+        teachersdata.clear()
+        raise HTTPException(status_code=401, detail="Sorry, only registered teachers may log in")
+    return {"success": f"welcome teacher {matched_teacher}"}
+
+    
 @app.post("/activities/{activity_name}/signup")
 def signup_for_activity(activity_name: str, email: str):
     """Sign up a student for an activity"""
@@ -107,7 +138,7 @@ def signup_for_activity(activity_name: str, email: str):
 
     # Add student
     activity["participants"].append(email)
-    return {"message": f"Signed up {email} for {activity_name}"}
+    return {"message": f"Signed up {email} for {activity_name}","data":teachersdata}
 
 
 @app.delete("/activities/{activity_name}/unregister")
@@ -119,7 +150,7 @@ def unregister_from_activity(activity_name: str, email: str):
 
     # Get the specific activity
     activity = activities[activity_name]
-
+    #return{"data":teachersdata["password"]}
     # Validate student is signed up
     if email not in activity["participants"]:
         raise HTTPException(
@@ -128,5 +159,11 @@ def unregister_from_activity(activity_name: str, email: str):
         )
 
     # Remove student
+    if not teachersdata.get("username") and not teachersdata.get("password"):
+       raise HTTPException(status_code=403,detail="this action only for login teachers")
     activity["participants"].remove(email)
-    return {"message": f"Unregistered {email} from {activity_name}"}
+    return{"message": f"Unregistered {email} from {activity_name}"}
+
+
+
+
