@@ -5,13 +5,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Mergington High School Activities</title>
     <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css" 
+    integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw==" 
+    crossorigin="anonymous" referrerpolicy="no-referrer" />
   </head>
   <body>
     <header>
+      
       <h1>Mergington High School</h1>
       <h2>Extracurricular Activities</h2>
     </header>
-
+   
     <main>
       <section id="activities-container">
         <h3>Available Activities</h3>
@@ -35,12 +39,34 @@
               <!-- Activity options will be loaded here -->
             </select>
           </div>
-          <button type="submit">Sign Up</button>
+          <div class="login-btns">
+            <button type="submit">Sign Up</button>
+            <button class='login'type="button" command="show-modal" commandfor="my-dialog">login</button>
+          </div>
         </form>
         <div id="message" class="hidden"></div>
+         <dialog id="my-dialog">
+            <button class="closeBtn" commandfor="my-dialog" command="close">
+               <i class="fa-solid fa-xmark"></i>
+            </button>
+           <form class="login-form">
+             <b>Enter your email</b>
+             <input class="login-email" type="email" required/>
+             <b>Enter your password</b>
+             <div class="password">
+               <input class="login-password" type="password" required/>
+              <i class="hide fa-solid fa-eye-slash" style="color: rgb(177, 151, 252);display:none"></i>
+              <i class="show fa-solid fa-eye" style="color: rgb(177, 151, 252);"></i>
+             </div>
+            
+             <div class="submition">
+               <button class="loginBtn" type="submit">Enter</button>
+             </div>
+            </form>
+          </dialog>
       </section>
     </main>
-
+</dialog>
     <footer>
       <p>&copy; 2023 Mergington High School</p>
     </footer>
